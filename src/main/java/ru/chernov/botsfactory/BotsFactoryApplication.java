@@ -9,5 +9,4 @@ public class BotsFactoryApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(BotsFactoryApplication.class, args);
 	}
-
 }
