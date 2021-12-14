@@ -1,0 +1,42 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext
+   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+    <changeSet id="20211213-12-create-tables-fks" author="hitz" context="production">
+
+        <addForeignKeyConstraint baseTableName="reply_row_button_union"
+                                 baseTableSchemaName="bots_factory"
+                                 baseColumnNames="reply_row_id"
+                                 constraintName="reply-row-button-union-row-id-fk"
+                                 referencedTableName="reply_keyboard_rows"
+                                 referencedTableSchemaName="bots_factory"
+                                 referencedColumnNames="id"
+                                 onDelete="CASCADE"/>
+        <addForeignKeyConstraint baseTableName="reply_row_button_union"
+                                 baseTableSchemaName="bots_factory"
+                                 baseColumnNames="reply_button_id"
+                                 constraintName="reply-row-button-union-button-id-fk"
+                                 referencedTableName="reply_buttons"
+                                 referencedTableSchemaName="bots_factory"
+                                 referencedColumnNames="id"
+                                 onDelete="CASCADE"/>
+
+        <addForeignKeyConstraint baseTableName="reply_keyboard_row_union"
+                                 baseTableSchemaName="bots_factory"
+                                 baseColumnNames="reply_keyboard_id"
+                                 constraintName="reply-keyboard-row-union-keyboard-id-fk"
+                                 referencedTableName="reply_keyboards"
+                                 referencedTableSchemaName="bots_factory"
+                                 referencedColumnNames="id"
+                                 onDelete="CASCADE"/>
+        <addForeignKeyConstraint baseTableName="reply_keyboard_row_union"
+                                 baseTableSchemaName="bots_factory"
+                                 baseColumnNames="reply_row_id"
+                                 constraintName="reply-keyboard-row-union-row-id-fk"
+                                 referencedTableName="reply_keyboard_rows"
+                                 referencedTableSchemaName="bots_factory"
+                                 referencedColumnNames="id"
+                                 onDelete="CASCADE"/>
+    </changeSet>
+</databaseChangeLog>

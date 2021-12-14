@@ -1,0 +1,37 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext
+   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+    <changeSet id="20211214-01-create-table-inline-buttons" author="hitz" context="production">
+        <createTable schemaName="bots_factory" tableName="inline_buttons" remarks="Buttons for keyboards">
+            <column name="id" type="bigint" autoIncrement="true" remarks="Identifier">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="text" type="varchar" remarks="Button description">
+                <constraints nullable="false"/>
+            </column>
+            <column name="url" type="varchar" remarks="Link to brows"/>
+            <column name="callback_data" type="varchar" remarks="Callback data"/>
+            <column name="pay" type="boolean" remarks="Pay flag" defaultValue="false"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="20211214-02-insert-into-table-inline-buttons" author="hitz" context="production">
+        <insert schemaName="bots_factory" tableName="inline_buttons">
+            <column name="id" type="bigint" value="1"/>
+            <column name="text" type="varchar" value="Показать музыку"/>
+            <column name="url" type="varchar" value="https://music.yandex.ru/home"/>
+        </insert>
+        <insert schemaName="bots_factory" tableName="inline_buttons">
+            <column name="id" type="bigint" value="2"/>
+            <column name="text" type="varchar" value="Показать видео"/>
+            <column name="url" type="varchar" value="https://www.youtube.com/"/>
+        </insert>
+        <insert schemaName="bots_factory" tableName="inline_buttons">
+            <column name="id" type="bigint" value="3"/>
+            <column name="text" type="varchar" value="Самостоятельный поиск"/>
+            <column name="url" type="varchar" value="https://www.google.com/"/>
+        </insert>
+    </changeSet>
+</databaseChangeLog>

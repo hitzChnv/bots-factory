@@ -1,0 +1,33 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext
+   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+    <changeSet id="20211214-05-create-table-inline-row-button-union" author="hitz" context="production">
+        <createTable schemaName="bots_factory" tableName="inline_row_button_union"
+                     remarks="Relation between rows and buttons">
+            <column name="inline_row_id" type="bigint" remarks="Row identifier"/>
+            <column name="inline_button_id" type="bigint" remarks="Button identifier"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="20211214-06-insert-into-table-inline-row-button-union" author="hitz" context="production">
+        <insert schemaName="bots_factory" tableName="inline_row_button_union">
+            <column name="inline_row_id" type="bigint" value="1"/>
+            <column name="inline_button_id" type="bigint" value="1"/>
+        </insert>
+        <insert schemaName="bots_factory" tableName="inline_row_button_union">
+            <column name="inline_row_id" type="bigint" value="1"/>
+            <column name="inline_button_id" type="bigint" value="3"/>
+        </insert>
+        <insert schemaName="bots_factory" tableName="inline_row_button_union">
+            <column name="inline_row_id" type="bigint" value="2"/>
+            <column name="inline_button_id" type="bigint" value="2"/>
+        </insert>
+        <insert schemaName="bots_factory" tableName="inline_row_button_union">
+            <column name="inline_row_id" type="bigint" value="2"/>
+            <column name="inline_button_id" type="bigint" value="3"/>
+        </insert>
+    </changeSet>
+
+</databaseChangeLog>

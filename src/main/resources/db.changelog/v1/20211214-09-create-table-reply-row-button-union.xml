@@ -1,0 +1,54 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext
+   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+    <changeSet id="20211213-06-create-table-reply-row-button-union" author="hitz" context="production">
+        <createTable schemaName="bots_factory" tableName="reply_row_button_union"
+                     remarks="Relation between rows and buttons">
+            <column name="reply_row_id" type="bigint" remarks="Row identifier"/>
+            <column name="reply_button_id" type="bigint" remarks="Button identifier"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="20211213-07-insert-into-table-reply-row-button-union" author="hitz" context="production">
+        <insert schemaName="bots_factory" tableName="reply_row_button_union">
+            <column name="reply_row_id" type="bigint" value="1"/>
+            <column name="reply_button_id" type="bigint" value="1"/>
+        </insert>
+        <insert schemaName="bots_factory" tableName="reply_row_button_union">
+            <column name="reply_row_id" type="bigint" value="2"/>
+            <column name="reply_button_id" type="bigint" value="2"/>
+        </insert>
+        <insert schemaName="bots_factory" tableName="reply_row_button_union">
+            <column name="reply_row_id" type="bigint" value="3"/>
+            <column name="reply_button_id" type="bigint" value="3"/>
+        </insert>
+        <insert schemaName="bots_factory" tableName="reply_row_button_union">
+            <column name="reply_row_id" type="bigint" value="4"/>
+            <column name="reply_button_id" type="bigint" value="4"/>
+        </insert>
+
+        <insert schemaName="bots_factory" tableName="reply_row_button_union">
+            <column name="reply_row_id" type="bigint" value="5"/>
+            <column name="reply_button_id" type="bigint" value="5"/>
+        </insert>
+        <insert schemaName="bots_factory" tableName="reply_row_button_union">
+            <column name="reply_row_id" type="bigint" value="5"/>
+            <column name="reply_button_id" type="bigint" value="6"/>
+        </insert>
+        <insert schemaName="bots_factory" tableName="reply_row_button_union">
+            <column name="reply_row_id" type="bigint" value="6"/>
+            <column name="reply_button_id" type="bigint" value="8"/>
+        </insert>
+
+        <insert schemaName="bots_factory" tableName="reply_row_button_union">
+            <column name="reply_row_id" type="bigint" value="7"/>
+            <column name="reply_button_id" type="bigint" value="7"/>
+        </insert>
+        <insert schemaName="bots_factory" tableName="reply_row_button_union">
+            <column name="reply_row_id" type="bigint" value="8"/>
+            <column name="reply_button_id" type="bigint" value="8"/>
+        </insert>
+    </changeSet>
+</databaseChangeLog>

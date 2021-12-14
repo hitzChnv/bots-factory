@@ -1,0 +1,54 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext
+   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+    <changeSet id="20211213-02-create-table-reply-buttons" author="hitz" context="production">
+        <createTable schemaName="bots_factory" tableName="reply_buttons" remarks="Buttons for keyboards">
+            <column name="id" type="bigint" autoIncrement="true" remarks="Identifier">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="text" type="varchar" remarks="Button description">
+                <constraints nullable="false"/>
+            </column>
+            <column name="request_contact" type="boolean" remarks="Request contact flag"/>
+            <column name="request_location" type="boolean" remarks="Request location flag"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="20211213-03-insert-into-table-reply-buttons" author="hitz" context="production">
+        <insert schemaName="bots_factory" tableName="reply_buttons">
+            <column name="id" type="bigint" value="1"/>
+            <column name="text" type="varchar" value="Контакты 📱"/>
+        </insert>
+        <insert schemaName="bots_factory" tableName="reply_buttons">
+            <column name="id" type="bigint" value="2"/>
+            <column name="text" type="varchar" value="Часто задаваемые вопросы 📎"/>
+        </insert>
+        <insert schemaName="bots_factory" tableName="reply_buttons">
+            <column name="id" type="bigint" value="3"/>
+            <column name="text" type="varchar" value="Музыка 🎧"/>
+        </insert>
+        <insert schemaName="bots_factory" tableName="reply_buttons">
+            <column name="id" type="bigint" value="4"/>
+            <column name="text" type="varchar" value="Видео 📹"/>
+        </insert>
+        <insert schemaName="bots_factory" tableName="reply_buttons">
+            <column name="id" type="bigint" value="5"/>
+            <column name="text" type="varchar" value="Показать"/>
+        </insert>
+        <insert schemaName="bots_factory" tableName="reply_buttons">
+            <column name="id" type="bigint" value="6"/>
+            <column name="text" type="varchar" value="Найти"/>
+        </insert>
+        <insert schemaName="bots_factory" tableName="reply_buttons">
+            <column name="id" type="bigint" value="7"/>
+            <column name="text" type="varchar" value="Показать вопросы"/>
+        </insert>
+        <insert schemaName="bots_factory" tableName="reply_buttons">
+            <column name="id" type="bigint" value="8"/>
+            <column name="text" type="varchar" value="Меню"/>
+        </insert>
+    </changeSet>
+
+</databaseChangeLog>
