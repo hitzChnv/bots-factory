@@ -69,31 +69,32 @@ public class EchoBot extends TelegramLongPollingBot {
         Predicate<Message> isMenu = m -> m.getText().startsWith("Меню");
 
         if (isContacts.test(message)) {
-            return buildReplyKeyboardMessage(chatId, "You are in contacts main menu. Choose action.",
+            return buildReplyKeyboardMessage(chatId, "Вы в меню контактов. Выберите действие.",
                     replyService.build(CONTACTS_REPLY_KEYBOARD));
 
         } else if (isShow.test(message)) {
-            return buildMessage(chatId, "You can try contact with @" + message.getFrom().getUserName() + " account");
+            return buildMessage(chatId, "Попытайтесь связаться со службой поддержки telegram: +7(000)0000000");
 
         } else if (isSearch.test(message)) {
-            return buildMessage(chatId, "Try this: www.google.com");
+            return buildMessage(chatId, "Попробуйте это: www.google.com");
 
         } else if (isQuestions.test(message)) {
-            return buildReplyKeyboardMessage(chatId, "You are in questions main menu. Choose action.", replyService.build(QUESTIONS_REPLY_KEYBOARD));
+            return buildReplyKeyboardMessage(chatId, "Вы в меню часто задаваемых вопросов. Выберите действие.",
+                    replyService.build(QUESTIONS_REPLY_KEYBOARD));
 
         } else if (isShowQuestions.test(message)) {
-            return buildMessage(chatId, "FAQ:\nQuestions and answers: www.questions.com");
+            return buildMessage(chatId, "FAQ:\nВопросы и ответы: www.questions.com");
 
         } else if (isMusic.test(message)) {
-            return buildInlineKeyboardMessage(chatId, "Follow the link if you want to listen to music!",
+            return buildInlineKeyboardMessage(chatId, "Перейдите по ссылке, что бы послушать музыку!",
                     inlineService.build(MUSIC_INLINE_KEYBOARD));
 
         } else if (isVideo.test(message)) {
-            return buildInlineKeyboardMessage(chatId, "Follow the link if you want to watch the video!",
+            return buildInlineKeyboardMessage(chatId, "Перейдите по ссылке, что бы помотреть видео!",
                     inlineService.build(VIDEO_INLINE_KEYBOARD));
 
         } else if (isMenu.test(message)) {
-            return buildReplyKeyboardMessage(chatId, "Main menu.", replyService.build(DEFAULT_REPLY_KEYBOARD));
+            return buildReplyKeyboardMessage(chatId, "Главное меню.", replyService.build(DEFAULT_REPLY_KEYBOARD));
 
         } else {
             return buildReplyKeyboardMessage(chatId, message.getText(), replyService.build(DEFAULT_REPLY_KEYBOARD));
