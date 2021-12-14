@@ -60,9 +60,9 @@ public class EchoBot extends TelegramLongPollingBot {
         var chatId = message.getChatId().toString();
 
         Predicate<Message> isContacts = m -> m.getText().startsWith("Контакты");
-        Predicate<Message> isShow = m -> m.getText().startsWith("Показать");
+        Predicate<Message> isShow = m -> m.getText().equals("Показать");
         Predicate<Message> isSearch = m -> m.getText().startsWith("Найти");
-        Predicate<Message> isShowQuestions = m -> m.getText().startsWith("Показать вопросы");
+        Predicate<Message> isShowQuestions = m -> m.getText().equals("Показать вопросы");
         Predicate<Message> isQuestions = m -> m.getText().startsWith("Часто задаваемые вопросы");
         Predicate<Message> isMusic = m -> m.getText().startsWith("Музыка");
         Predicate<Message> isVideo = m -> m.getText().startsWith("Видео");
@@ -73,13 +73,13 @@ public class EchoBot extends TelegramLongPollingBot {
                     replyService.build(CONTACTS_REPLY_KEYBOARD));
 
         } else if (isShow.test(message)) {
-            return buildMessage(chatId, "You can try contact with " + message.getFrom().getUserName() + "account");
+            return buildMessage(chatId, "You can try contact with @" + message.getFrom().getUserName() + " account");
 
         } else if (isSearch.test(message)) {
             return buildMessage(chatId, "Try this: www.google.com");
 
         } else if (isQuestions.test(message)) {
-            return buildReplyKeyboardMessage(chatId, "FAQ:\nAnswers: www.answrers.com", replyService.build(QUESTIONS_REPLY_KEYBOARD));
+            return buildReplyKeyboardMessage(chatId, "You are in questions main menu. Choose action.", replyService.build(QUESTIONS_REPLY_KEYBOARD));
 
         } else if (isShowQuestions.test(message)) {
             return buildMessage(chatId, "FAQ:\nQuestions and answers: www.questions.com");
