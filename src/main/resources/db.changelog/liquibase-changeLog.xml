@@ -16,4 +16,5 @@
     <include file="v1/20211214-11-create-table-reply-keyboard-row-union.xml" relativeToChangelogFile="true"/>
     <include file="v1/20211214-12-create-reply-keyboard-fks.xml" relativeToChangelogFile="true"/>
     <include file="v1/20211214-13-create-inline-keyboard-fks.xml" relativeToChangelogFile="true"/>
+    <include file="v2/20211215-01-create_table-chats.xml" relativeToChangelogFile="true"/>
 </databaseChangeLog>

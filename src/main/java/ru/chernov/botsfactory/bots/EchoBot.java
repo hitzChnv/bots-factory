@@ -10,14 +10,20 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboard;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
+import ru.chernov.botsfactory.model.entity.Chat;
+import ru.chernov.botsfactory.model.enums.InlineKeyboardType;
+import ru.chernov.botsfactory.model.enums.ReplyKeyboardType;
+import ru.chernov.botsfactory.model.keyboards.InlineKeyboard;
+import ru.chernov.botsfactory.model.keyboards.buttons.InlineButton;
+import ru.chernov.botsfactory.model.keyboards.buttons.ReplyButton;
+import ru.chernov.botsfactory.service.ChatService;
 import ru.chernov.botsfactory.service.InlineKeyboardService;
 import ru.chernov.botsfactory.service.ReplyKeyboardService;
 
-import java.util.function.Predicate;
+import java.util.List;
+import java.util.Optional;
 
-import static ru.chernov.botsfactory.model.enums.InlineKeyboardType.MUSIC_INLINE_KEYBOARD;
-import static ru.chernov.botsfactory.model.enums.InlineKeyboardType.VIDEO_INLINE_KEYBOARD;
-import static ru.chernov.botsfactory.model.enums.ReplyKeyboardType.*;
+import static java.util.Objects.nonNull;
 
 /**
  * Simple echo bot
@@ -34,6 +40,7 @@ public class EchoBot extends TelegramLongPollingBot {
 
     private final ReplyKeyboardService replyService;
     private final InlineKeyboardService inlineService;
+    private final ChatService chatService;
 
     @Override
     public String getBotToken() {
@@ -59,68 +66,87 @@ public class EchoBot extends TelegramLongPollingBot {
         var message = update.getMessage();
         var chatId = message.getChatId().toString();
 
-        Predicate<Message> isContacts = m -> m.getText().startsWith("Контакты");
-        Predicate<Message> isShow = m -> m.getText().equals("Показать");
-        Predicate<Message> isSearch = m -> m.getText().startsWith("Найти");
-        Predicate<Message> isShowQuestions = m -> m.getText().equals("Показать вопросы");
-        Predicate<Message> isQuestions = m -> m.getText().startsWith("Часто задаваемые вопросы");
-        Predicate<Message> isMusic = m -> m.getText().startsWith("Музыка");
-        Predicate<Message> isVideo = m -> m.getText().startsWith("Видео");
-        Predicate<Message> isMenu = m -> m.getText().startsWith("Меню");
 
-        if (isContacts.test(message)) {
-            return buildReplyKeyboardMessage(chatId, "Вы в меню контактов. Выберите действие.",
-                    replyService.build(CONTACTS_REPLY_KEYBOARD));
+        Optional<Chat> optionalChat = chatService.findById(chatId);
+        Chat chat = optionalChat.isEmpty() ? chatService.create(chatId) : optionalChat.get();
 
-        } else if (isShow.test(message)) {
-            return buildMessage(chatId, "Попытайтесь связаться со службой поддержки telegram: +7(000)0000000");
 
-        } else if (isSearch.test(message)) {
-            return buildMessage(chatId, "Попробуйте это: www.google.com");
+        List<ru.chernov.botsfactory.model.keyboards.ReplyKeyboard> replyKeyboards = replyService.findAllByChatId(chat.getId());
+        List<InlineKeyboard> inlineKeyboards = inlineService.findAllByChatId(chat.getId());
 
-        } else if (isQuestions.test(message)) {
-            return buildReplyKeyboardMessage(chatId, "Вы в меню часто задаваемых вопросов. Выберите действие.",
-                    replyService.build(QUESTIONS_REPLY_KEYBOARD));
+        Optional<ReplyButton> replyButton = replyKeyboards.stream()
+                .flatMap(k -> k.getRows().stream())
+                .flatMap(r -> r.getButtons().stream())
+                .filter(b -> b.getText().equals(message.getText()))
+                .findFirst();
 
-        } else if (isShowQuestions.test(message)) {
-            return buildMessage(chatId, "FAQ:\nВопросы и ответы: www.questions.com");
+        Optional<InlineButton> inlineButton = inlineKeyboards.stream()
+                .flatMap(k -> k.getRows().stream())
+                .flatMap(r -> r.getButtons().stream())
+                .filter(b -> b.getText().equals(message.getText()))
+                .findFirst();
 
-        } else if (isMusic.test(message)) {
-            return buildInlineKeyboardMessage(chatId, "Перейдите по ссылке, что бы послушать музыку!",
-                    inlineService.build(MUSIC_INLINE_KEYBOARD));
+        if (replyButton.isEmpty() && inlineButton.isPresent()) {
+            return buildMessage(chatId, inlineButton.get());
 
-        } else if (isVideo.test(message)) {
-            return buildInlineKeyboardMessage(chatId, "Перейдите по ссылке, что бы помотреть видео!",
-                    inlineService.build(VIDEO_INLINE_KEYBOARD));
-
-        } else if (isMenu.test(message)) {
-            return buildReplyKeyboardMessage(chatId, "Главное меню.", replyService.build(DEFAULT_REPLY_KEYBOARD));
+        } else if (replyButton.isPresent() && inlineButton.isEmpty()) {
+            return buildMessage(chatId, replyButton.get());
 
         } else {
-            return buildReplyKeyboardMessage(chatId, message.getText(), replyService.build(DEFAULT_REPLY_KEYBOARD));
+            return buildMessage(message);
+
         }
     }
 
-    private SendMessage buildReplyKeyboardMessage(String chatId, String text, ReplyKeyboard keyboard) {
+    private SendMessage buildMessage(String chatId, InlineButton button) {
+        String type = button.getNextKeyboardType();
+
+        if (nonNull(type)) {
+            var keyboard = InlineKeyboardType.hasType(type)
+                    ? inlineService.build(InlineKeyboardType.valueOf(type))
+                    : replyService.build(ReplyKeyboardType.valueOf(type));
+
+            return SendMessage.builder()
+                    .chatId(chatId)
+                    .text(button.getNextMessageText())
+                    .replyMarkup(keyboard)
+                    .build();
+        }
+
         return SendMessage.builder()
                 .chatId(chatId)
-                .text(text)
-                .replyMarkup(keyboard)
+                .text(button.getNextMessageText())
                 .build();
+
     }
 
-    private SendMessage buildInlineKeyboardMessage(String chatId, String text, ReplyKeyboard keyboard) {
+    private SendMessage buildMessage(String chatId, ReplyButton button) {
+        String type = button.getNextKeyboardType();
+
+        if (nonNull(type)) {
+            var keyboard = ReplyKeyboardType.hasType(type)
+                    ? replyService.build(ReplyKeyboardType.valueOf(type))
+                    : inlineService.build(InlineKeyboardType.valueOf(type));
+
+            return SendMessage.builder()
+                    .chatId(chatId)
+                    .text(button.getNextMessageText())
+                    .replyMarkup(keyboard)
+                    .build();
+        }
+
         return SendMessage.builder()
                 .chatId(chatId)
-                .text(text)
-                .replyMarkup(keyboard)
+                .text(button.getNextMessageText())
                 .build();
+
     }
 
-    private SendMessage buildMessage(String chatId, String text) {
+    private SendMessage buildMessage(Message message) {
         return SendMessage.builder()
-                .chatId(chatId)
-                .text(text)
+                .chatId(message.getChatId().toString())
+                .text(message.getText())
+                .replyMarkup(replyService.build(ReplyKeyboardType.DEFAULT_REPLY_KEYBOARD))
                 .build();
     }
 }

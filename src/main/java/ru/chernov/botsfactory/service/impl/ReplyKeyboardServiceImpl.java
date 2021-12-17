@@ -3,16 +3,16 @@ package ru.chernov.botsfactory.service.impl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboard;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
-import ru.chernov.botsfactory.converter.ReplyKeyboardRowConverter;
+import ru.chernov.botsfactory.converter.ReplyKeyboardConverter;
 import ru.chernov.botsfactory.model.enums.ReplyKeyboardType;
-import ru.chernov.botsfactory.model.keyboards.buttons.ReplyKeyboardRow;
+import ru.chernov.botsfactory.model.keyboards.ReplyKeyboard;
 import ru.chernov.botsfactory.repository.ReplyKeyboardRepository;
 import ru.chernov.botsfactory.service.ReplyKeyboardService;
 
 import java.util.List;
+
+import static java.util.Optional.ofNullable;
 
 @Service
 @RequiredArgsConstructor
@@ -22,15 +22,25 @@ public class ReplyKeyboardServiceImpl implements ReplyKeyboardService {
 
     @Override
     @Transactional
-    public ReplyKeyboard build(ReplyKeyboardType type) {
-        var replyKeyboard = repository.findByType(type);
+    public ReplyKeyboardMarkup build(ReplyKeyboardType type) {
+        var replyKeyboard = ofNullable(repository.findByType(type));
+        if (replyKeyboard.isEmpty()) {
+            return ReplyKeyboardMarkup.builder()
+                    .build();
+        }
 
-        List<ReplyKeyboardRow> rows = replyKeyboard.getRows();
-        List<KeyboardRow> keyboardRows = ReplyKeyboardRowConverter.convertAll(rows);
+        return ReplyKeyboardConverter.convert(replyKeyboard.get());
+    }
 
-        return ReplyKeyboardMarkup.builder()
-                .keyboard(keyboardRows)
-                .resizeKeyboard(true)
-                .build();
+    @Override
+    @Transactional(readOnly = true)
+    public List<ReplyKeyboard> findAll() {
+        return repository.findAll();
+    }
+
+    @Override
+    @Transactional
+    public List<ReplyKeyboard> findAllByChatId(String chatId) {
+        return repository.findAllByChatId(chatId);
     }
 }

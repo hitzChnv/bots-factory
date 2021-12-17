@@ -15,6 +15,7 @@ public final class InlineButtonConverter {
         return InlineKeyboardButton.builder()
                 .text(source.getText())
                 .url(source.getUrl())
+                .callbackData(source.getCallbackData())
                 .pay(source.getPay())
                 .build();
     }
