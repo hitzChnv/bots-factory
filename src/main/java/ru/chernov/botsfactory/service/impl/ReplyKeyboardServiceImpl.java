@@ -25,8 +25,7 @@ public class ReplyKeyboardServiceImpl implements ReplyKeyboardService {
     public ReplyKeyboardMarkup build(ReplyKeyboardType type) {
         var replyKeyboard = ofNullable(repository.findByType(type));
         if (replyKeyboard.isEmpty()) {
-            return ReplyKeyboardMarkup.builder()
-                    .build();
+            return ReplyKeyboardMarkup.builder().build();
         }
 
         return ReplyKeyboardConverter.convert(replyKeyboard.get());

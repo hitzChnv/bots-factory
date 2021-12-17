@@ -3,7 +3,7 @@
                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext
    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
 
-    <changeSet id="20211214-07-create-table-inline-keyboard-row-union" author="hitz" context="production">
+    <changeSet id="20211214-06-01-create-table-inline-keyboard-row-union" author="hitz" context="production">
         <createTable schemaName="bots_factory" tableName="inline_keyboard_row_union"
                      remarks="Relation between rows and keyboards">
             <column name="inline_keyboard_id" type="bigint" remarks="Keyboard id"/>
@@ -11,7 +11,7 @@
         </createTable>
     </changeSet>
 
-    <changeSet id="20211214-08-insert-into-table-inline-keyboard-row" author="hitz" context="production">
+    <changeSet id="20211214-06-01-insert-into-table-inline-keyboard-row" author="hitz" context="production">
         <insert schemaName="bots_factory" tableName="inline_keyboard_row_union">
             <column name="inline_keyboard_id" type="bigint" value="1"/>
             <column name="inline_row_id" type="bigint" value="1"/>

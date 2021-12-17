@@ -3,7 +3,6 @@ package ru.chernov.botsfactory.model.keyboards;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
-import org.hibernate.Hibernate;
 import ru.chernov.botsfactory.model.entity.Chat;
 import ru.chernov.botsfactory.model.enums.ReplyKeyboardType;
 import ru.chernov.botsfactory.model.keyboards.buttons.ReplyKeyboardRow;
@@ -47,13 +46,14 @@ public class ReplyKeyboard {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        if (!(o instanceof ReplyKeyboard)) return false;
         ReplyKeyboard that = (ReplyKeyboard) o;
-        return id != null && Objects.equals(id, that.id);
+
+        return id.equals(that.id) && type == that.type && Objects.equals(rows, that.rows) && Objects.equals(chats, that.chats);
     }
 
     @Override
     public int hashCode() {
-        return getClass().hashCode();
+        return Objects.hash(id, type, rows, chats);
     }
 }

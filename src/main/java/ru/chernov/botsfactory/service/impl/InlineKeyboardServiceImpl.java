@@ -25,8 +25,7 @@ public class InlineKeyboardServiceImpl implements InlineKeyboardService {
     public InlineKeyboardMarkup build(InlineKeyboardType type) {
         var replyKeyboard = ofNullable(repository.findByType(type));
         if (replyKeyboard.isEmpty()) {
-            return InlineKeyboardMarkup.builder()
-                    .build();
+            return InlineKeyboardMarkup.builder().build();
         }
 
         return InlineKeyboardConverter.convert(replyKeyboard.get());

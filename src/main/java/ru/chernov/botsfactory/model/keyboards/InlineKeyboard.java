@@ -3,7 +3,6 @@ package ru.chernov.botsfactory.model.keyboards;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
-import org.hibernate.Hibernate;
 import ru.chernov.botsfactory.model.entity.Chat;
 import ru.chernov.botsfactory.model.enums.InlineKeyboardType;
 import ru.chernov.botsfactory.model.keyboards.buttons.InlineKeyboardRow;
@@ -47,13 +46,14 @@ public class InlineKeyboard {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        if (!(o instanceof InlineKeyboard)) return false;
         InlineKeyboard that = (InlineKeyboard) o;
-        return id != null && Objects.equals(id, that.id);
+
+        return id.equals(that.id) && type == that.type && Objects.equals(rows, that.rows) && Objects.equals(chats, that.chats);
     }
 
     @Override
     public int hashCode() {
-        return getClass().hashCode();
+        return Objects.hash(id, type, rows, chats);
     }
 }

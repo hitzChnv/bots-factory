@@ -1,10 +1,11 @@
 package ru.chernov.botsfactory.model.keyboards.buttons;
 
-import lombok.*;
-import org.hibernate.Hibernate;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.*;
-
 import java.util.Objects;
 
 import static javax.persistence.GenerationType.IDENTITY;
@@ -41,13 +42,17 @@ public class ReplyButton {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        if (!(o instanceof ReplyButton)) return false;
         ReplyButton that = (ReplyButton) o;
-        return id != null && Objects.equals(id, that.id);
+
+        return id.equals(that.id) && text.equals(that.text) && Objects.equals(requestContact, that.requestContact)
+                && Objects.equals(requestLocation, that.requestLocation)
+                && Objects.equals(nextMessageText, that.nextMessageText)
+                && Objects.equals(nextKeyboardType, that.nextKeyboardType);
     }
 
     @Override
     public int hashCode() {
-        return getClass().hashCode();
+        return Objects.hash(id, text, requestContact, requestLocation, nextMessageText, nextKeyboardType);
     }
 }

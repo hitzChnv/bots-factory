@@ -1,10 +1,11 @@
 package ru.chernov.botsfactory.model.keyboards.buttons;
 
-import lombok.*;
-import org.hibernate.Hibernate;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.*;
-
 import java.util.Objects;
 
 import static javax.persistence.GenerationType.IDENTITY;
@@ -44,13 +45,17 @@ public class InlineButton {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        if (!(o instanceof InlineButton)) return false;
         InlineButton that = (InlineButton) o;
-        return id != null && Objects.equals(id, that.id);
+
+        return id.equals(that.id) && text.equals(that.text) && Objects.equals(url, that.url)
+                && Objects.equals(callbackData, that.callbackData) && Objects.equals(pay, that.pay)
+                && Objects.equals(nextMessageText, that.nextMessageText)
+                && Objects.equals(nextKeyboardType, that.nextKeyboardType);
     }
 
     @Override
     public int hashCode() {
-        return getClass().hashCode();
+        return Objects.hash(id, text, url, callbackData, pay, nextMessageText, nextKeyboardType);
     }
 }
