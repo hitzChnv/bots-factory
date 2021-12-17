@@ -8,18 +8,17 @@ import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboard;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import ru.chernov.botsfactory.model.entity.Chat;
 import ru.chernov.botsfactory.model.enums.InlineKeyboardType;
 import ru.chernov.botsfactory.model.enums.ReplyKeyboardType;
-import ru.chernov.botsfactory.model.keyboards.InlineKeyboard;
 import ru.chernov.botsfactory.model.keyboards.buttons.InlineButton;
 import ru.chernov.botsfactory.model.keyboards.buttons.ReplyButton;
 import ru.chernov.botsfactory.service.ChatService;
 import ru.chernov.botsfactory.service.InlineKeyboardService;
 import ru.chernov.botsfactory.service.ReplyKeyboardService;
 
-import java.util.List;
 import java.util.Optional;
 
 import static java.util.Objects.nonNull;
@@ -57,29 +56,29 @@ public class EchoBot extends TelegramLongPollingBot {
         if (update.hasMessage() && update.getMessage().hasText()) {
             var message = update.getMessage();
 
-            execute(buildMessage(message));
+            execute(create(message));
 
         } else if (update.hasCallbackQuery()) {
             var message = update.getCallbackQuery().getMessage();
 
-            execute(buildMessage(message));
+            execute(create(message));
         }
     }
 
-    private SendMessage buildMessage(Message message) {
+    private SendMessage create(Message message) {
         var chatId = message.getChatId().toString();
 
-        Optional<Chat> optionalChat = chatService.findById(chatId);
-        Chat chat = optionalChat.isEmpty() ? chatService.create(chatId) : optionalChat.get();
+        var optionalChat = chatService.findById(chatId);
+        var chat = optionalChat.isEmpty() ? chatService.create(chatId) : optionalChat.get();
 
         var inlineButton = findInlineButton(message, chat);
         var replyButton = findReplyButton(message, chat);
 
         if (replyButton.isEmpty() && inlineButton.isPresent()) {
-            return buildMessage(chatId, inlineButton.get());
+            return create(chatId, inlineButton.get());
 
         } else if (replyButton.isPresent() && inlineButton.isEmpty()) {
-            return buildMessage(chatId, replyButton.get());
+            return create(chatId, replyButton.get());
 
         } else {
             return buildDefaultMessage(message);
@@ -107,48 +106,51 @@ public class EchoBot extends TelegramLongPollingBot {
                 .findFirst();
     }
 
-    private SendMessage buildMessage(String chatId, InlineButton button) {
-        String type = button.getNextKeyboardType();
+    private SendMessage create(String chatId, InlineButton button) {
+        var type = button.getNextKeyboardType();
+        var text = button.getNextMessageText();
 
         if (nonNull(type)) {
             var keyboard = InlineKeyboardType.hasType(type)
                     ? inlineService.build(InlineKeyboardType.valueOf(type))
                     : replyService.build(ReplyKeyboardType.valueOf(type));
 
-            return SendMessage.builder()
-                    .chatId(chatId)
-                    .text(button.getNextMessageText())
-                    .replyMarkup(keyboard)
-                    .build();
+            return buildMessage(chatId, text, keyboard);
         }
 
-        return SendMessage.builder()
-                .chatId(chatId)
-                .text(button.getNextMessageText())
-                .build();
+        return buildMessage(chatId, text);
 
     }
 
-    private SendMessage buildMessage(String chatId, ReplyButton button) {
-        String type = button.getNextKeyboardType();
+    private SendMessage create(String chatId, ReplyButton button) {
+        var type = button.getNextKeyboardType();
+        var text = button.getNextMessageText();
 
         if (nonNull(type)) {
             var keyboard = ReplyKeyboardType.hasType(type)
                     ? replyService.build(ReplyKeyboardType.valueOf(type))
                     : inlineService.build(InlineKeyboardType.valueOf(type));
 
-            return SendMessage.builder()
-                    .chatId(chatId)
-                    .text(button.getNextMessageText())
-                    .replyMarkup(keyboard)
-                    .build();
+            return buildMessage(chatId, text, keyboard);
         }
 
+        return buildMessage(chatId, text);
+    }
+
+    private SendMessage buildMessage(String chatId, String text) {
         return SendMessage.builder()
                 .chatId(chatId)
-                .text(button.getNextMessageText())
+                .text(text)
                 .build();
+    }
 
+
+    private SendMessage buildMessage(String chatId, String text, ReplyKeyboard keyboard) {
+        return SendMessage.builder()
+                .chatId(chatId)
+                .text(text)
+                .replyMarkup(keyboard)
+                .build();
     }
 
     private SendMessage buildDefaultMessage(Message message) {
