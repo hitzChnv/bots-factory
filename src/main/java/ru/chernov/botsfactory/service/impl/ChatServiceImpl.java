@@ -6,8 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.chernov.botsfactory.model.entity.Chat;
 import ru.chernov.botsfactory.repository.ChatRepository;
 import ru.chernov.botsfactory.service.ChatService;
-import ru.chernov.botsfactory.service.InlineKeyboardService;
-import ru.chernov.botsfactory.service.ReplyKeyboardService;
+import ru.chernov.botsfactory.service.KeyboardService;
 
 import java.util.Optional;
 
@@ -16,15 +15,12 @@ import java.util.Optional;
 public class ChatServiceImpl implements ChatService {
 
     private final ChatRepository repository;
-    private final InlineKeyboardService inlineKeyboardService;
-    private final ReplyKeyboardService replyKeyboardService;
+    private final KeyboardService keyboardService;
 
     @Override
     @Transactional
     public Chat create(String chatId) {
-        var chat = new Chat(chatId,
-                replyKeyboardService.findAll(),
-                inlineKeyboardService.findAll());
+        var chat = new Chat(chatId, keyboardService.findAll());
 
         return repository.save(chat);
     }

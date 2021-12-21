@@ -1,0 +1,37 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext
+   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+    <changeSet id="20211221-07-01-create-table-keyboards" author="hitz" context="production">
+        <createTable schemaName="bots_factory" tableName="keyboards" remarks="Keyboard rows of buttons">
+            <column name="id" type="bigint" autoIncrement="true" remarks="Identifier">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="type" type="varchar" remarks="Type of keyboard"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="20211221-07-02-insert-into-table-reply-keyboards" author="hitz" context="production">
+        <insert schemaName="bots_factory" tableName="keyboards">
+            <column name="id" type="bigint" value="1"/>
+            <column name="type" type="varchar" value="DEFAULT_REPLY_KEYBOARD"/>
+        </insert>
+        <insert schemaName="bots_factory" tableName="keyboards">
+            <column name="id" type="bigint" value="2"/>
+            <column name="type" type="varchar" value="CONTACTS_REPLY_KEYBOARD"/>
+        </insert>
+        <insert schemaName="bots_factory" tableName="keyboards">
+            <column name="id" type="bigint" value="3"/>
+            <column name="type" type="varchar" value="QUESTIONS_REPLY_KEYBOARD"/>
+        </insert>
+        <insert schemaName="bots_factory" tableName="keyboards">
+            <column name="id" type="bigint" value="4"/>
+            <column name="type" type="varchar" value="MUSIC_INLINE_KEYBOARD"/>
+        </insert>
+        <insert schemaName="bots_factory" tableName="keyboards">
+            <column name="id" type="bigint" value="5"/>
+            <column name="type" type="varchar" value="VIDEO_INLINE_KEYBOARD"/>
+        </insert>
+    </changeSet>
+</databaseChangeLog>

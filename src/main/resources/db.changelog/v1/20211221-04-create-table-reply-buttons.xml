@@ -3,7 +3,7 @@
                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext
    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
 
-    <changeSet id="20211213-07-01-create-table-reply-buttons" author="hitz" context="production">
+    <changeSet id="20211221-04-01-create-table-reply-buttons" author="hitz" context="production">
         <createTable schemaName="bots_factory" tableName="reply_buttons" remarks="Buttons for keyboards">
             <column name="id" type="bigint" autoIncrement="true" remarks="Identifier">
                 <constraints primaryKey="true" nullable="false"/>
@@ -13,56 +13,56 @@
             </column>
             <column name="request_contact" type="boolean" remarks="Request contact flag"/>
             <column name="request_location" type="boolean" remarks="Request location flag"/>
-            <column name="next_message_text" type="varchar" remarks="Message text after click the button"/>
-            <column name="next_keyboard_type" type="varchar" remarks="Keyboard after click the button"/>
+            <column name="description" type="varchar" remarks="Message text after click the button"/>
+            <column name="attached_keyboard_id" type="bigint" remarks="Keyboard after click the button"/>
         </createTable>
     </changeSet>
 
-    <changeSet id="20211213-07-02-insert-into-table-reply-buttons" author="hitz" context="production">
+    <changeSet id="20211221-04-02-insert-into-table-reply-buttons" author="hitz" context="production">
         <insert schemaName="bots_factory" tableName="reply_buttons">
             <column name="id" type="bigint" value="1"/>
             <column name="text" type="varchar" value="Контакты 📱"/>
-            <column name="next_message_text" type="varchar" value="Вы в меню контактов. Выберите действие."/>
-            <column name="next_keyboard_type" type="varchar" value="CONTACTS_REPLY_KEYBOARD"/>
+            <column name="description" type="varchar" value="Вы в меню контактов. Выберите действие."/>
+            <column name="attached_keyboard_id" type="bigint" value="2"/>
         </insert>
         <insert schemaName="bots_factory" tableName="reply_buttons">
             <column name="id" type="bigint" value="2"/>
             <column name="text" type="varchar" value="Часто задаваемые вопросы 📎"/>
-            <column name="next_message_text" type="varchar" value="Вы в меню часто задаваемых вопросов. Выберите действие."/>
-            <column name="next_keyboard_type" type="varchar" value="QUESTIONS_REPLY_KEYBOARD"/>
+            <column name="description" type="varchar" value="Вы в меню часто задаваемых вопросов. Выберите действие."/>
+            <column name="attached_keyboard_id" type="bigint" value="3"/>
         </insert>
         <insert schemaName="bots_factory" tableName="reply_buttons">
             <column name="id" type="bigint" value="3"/>
             <column name="text" type="varchar" value="Музыка 🎧"/>
-            <column name="next_message_text" type="varchar" value="Перейдите по ссылке, что бы послушать музыку!"/>
-            <column name="next_keyboard_type" type="varchar" value="MUSIC_INLINE_KEYBOARD"/>
+            <column name="description" type="varchar" value="Перейдите по ссылке, что бы послушать музыку!"/>
+            <column name="attached_keyboard_id" type="bigint" value="4"/>
         </insert>
         <insert schemaName="bots_factory" tableName="reply_buttons">
             <column name="id" type="bigint" value="4"/>
             <column name="text" type="varchar" value="Видео 📹"/>
-            <column name="next_message_text" type="varchar" value="Перейдите по ссылке, что бы помотреть видео!"/>
-            <column name="next_keyboard_type" type="varchar" value="VIDEO_INLINE_KEYBOARD"/>
+            <column name="description" type="varchar" value="Перейдите по ссылке, что бы помотреть видео!"/>
+            <column name="attached_keyboard_id" type="bigint" value="5"/>
         </insert>
         <insert schemaName="bots_factory" tableName="reply_buttons">
             <column name="id" type="bigint" value="5"/>
             <column name="text" type="varchar" value="Показать контакты"/>
-            <column name="next_message_text" type="varchar" value="Попытайтесь связаться со службой поддержки telegram: +7(000)0000000"/>
+            <column name="description" type="varchar" value="Попытайтесь связаться со службой поддержки telegram: +7(000)0000000"/>
         </insert>
         <insert schemaName="bots_factory" tableName="reply_buttons">
             <column name="id" type="bigint" value="6"/>
             <column name="text" type="varchar" value="Найти контакты"/>
-            <column name="next_message_text" type="varchar" value="Попробуйте это: www.google.com"/>
+            <column name="description" type="varchar" value="Попробуйте это: www.google.com"/>
         </insert>
         <insert schemaName="bots_factory" tableName="reply_buttons">
             <column name="id" type="bigint" value="7"/>
             <column name="text" type="varchar" value="Показать вопросы"/>
-            <column name="next_message_text" type="varchar" value="FAQ:\nВопросы и ответы: www.questions.com"/>
+            <column name="description" type="varchar" value="FAQ:\nВопросы и ответы: www.questions.com"/>
         </insert>
         <insert schemaName="bots_factory" tableName="reply_buttons">
             <column name="id" type="bigint" value="8"/>
             <column name="text" type="varchar" value="Меню"/>
-            <column name="next_message_text" type="varchar" value="Главное меню."/>
-            <column name="next_keyboard_type" type="varchar" value="DEFAULT_REPLY_KEYBOARD"/>
+            <column name="description" type="varchar" value="Главное меню."/>
+            <column name="attached_keyboard_id" type="bigint" value="1"/>
         </insert>
     </changeSet>
 

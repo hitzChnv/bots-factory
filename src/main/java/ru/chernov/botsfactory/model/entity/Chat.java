@@ -4,8 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
-import ru.chernov.botsfactory.model.keyboards.InlineKeyboard;
-import ru.chernov.botsfactory.model.keyboards.ReplyKeyboard;
+import ru.chernov.botsfactory.model.keyboards.Keyboard;
 
 import javax.persistence.*;
 import java.util.List;
@@ -23,30 +22,23 @@ public class Chat {
     @Id
     private String id;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany
     @JoinTable(schema = "bots_factory", name = "chat_keyboard_union",
             joinColumns = @JoinColumn(name = "chat_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "reply_keyboard_id", referencedColumnName = "id"))
-    private List<ReplyKeyboard> replyKeyboards;
-
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(schema = "bots_factory", name = "chat_keyboard_union",
-            joinColumns = @JoinColumn(name = "chat_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "inline_keyboard_id", referencedColumnName = "id"))
-    private List<InlineKeyboard> inlineKeyboards;
+            inverseJoinColumns = @JoinColumn(name = "keyboard_id", referencedColumnName = "id"))
+    private List<Keyboard> keyboards;
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Chat)) return false;
         Chat chat = (Chat) o;
-        return id.equals(chat.id) && Objects.equals(replyKeyboards, chat.replyKeyboards)
-                && Objects.equals(inlineKeyboards, chat.inlineKeyboards);
+        return Objects.equals(id, chat.id) && Objects.equals(keyboards, chat.keyboards);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, replyKeyboards, inlineKeyboards);
+        return Objects.hash(id, keyboards);
     }
 }
 

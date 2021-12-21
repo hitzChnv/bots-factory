@@ -2,102 +2,74 @@ package ru.chernov.botsfactory.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboard;
 import ru.chernov.botsfactory.model.entity.Chat;
-import ru.chernov.botsfactory.model.enums.InlineKeyboardType;
-import ru.chernov.botsfactory.model.enums.ReplyKeyboardType;
-import ru.chernov.botsfactory.model.keyboards.buttons.InlineButton;
-import ru.chernov.botsfactory.model.keyboards.buttons.ReplyButton;
 import ru.chernov.botsfactory.service.ChatService;
-import ru.chernov.botsfactory.service.InlineKeyboardService;
+import ru.chernov.botsfactory.service.KeyboardService;
 import ru.chernov.botsfactory.service.MessageService;
-import ru.chernov.botsfactory.service.ReplyKeyboardService;
 
 import java.util.Optional;
 
 import static java.util.Objects.nonNull;
+import static ru.chernov.botsfactory.converter.KeyboardConverter.convert;
+import static ru.chernov.botsfactory.model.enums.KeyboardType.DEFAULT_REPLY_KEYBOARD;
 
 @Service
 @RequiredArgsConstructor
 public class MessageServiceImpl implements MessageService {
 
-    private final ReplyKeyboardService replyService;
-    private final InlineKeyboardService inlineService;
+    private final KeyboardService keyboardService;
     private final ChatService chatService;
 
     @Override
+    @Transactional
     public SendMessage create(Message message) {
         var chatId = message.getChatId().toString();
 
         var optionalChat = chatService.findById(chatId);
         var chat = optionalChat.isEmpty() ? chatService.create(chatId) : optionalChat.get();
 
-        var inlineButton = findInlineButtonByCommand(message, chat);
-        var replyButton = findReplyButtonByCommand(message, chat);
-
-        if (replyButton.isEmpty() && inlineButton.isPresent()) {
-            return createByCommand(chatId, inlineButton.get());
-
-        } else if (replyButton.isPresent() && inlineButton.isEmpty()) {
-            return createByCommand(chatId, replyButton.get());
-
-        } else {
-            return buildDefaultMessage(message);
-
-        }
+        return create(message, chat);
     }
 
-    private Optional<InlineButton> findInlineButtonByCommand(Message message, Chat chat) {
-        var inlineKeyboards = inlineService.findAllByChatId(chat.getId());
+    private SendMessage create(Message message, Chat chat) {
+        var defaultKeyboard = convert(keyboardService.findByType(DEFAULT_REPLY_KEYBOARD));
 
-        return inlineKeyboards.stream()
-                .flatMap(k -> k.getRows().stream())
+        return buildMessage(message, chat)
+                .orElse(buildMessage(chat.getId(), message.getText(), defaultKeyboard));
+    }
+
+    private Optional<SendMessage> buildMessage(Message message, Chat chat) {
+        var keyboards = chat.getKeyboards();
+
+        var inlineMessage = keyboards.stream()
+                .flatMap(k -> k.getInlineRows().stream())
                 .flatMap(r -> r.getButtons().stream())
                 .filter(b -> b.getText().equals(message.getText()))
+                .map(b -> {
+                    return nonNull(b.getAttachedKeyboard())
+                            ? buildMessage(chat.getId(), b.getDescription(), convert(b.getAttachedKeyboard()))
+                            : buildMessage(chat.getId(), b.getDescription());
+
+                })
                 .findFirst();
-    }
 
-    private Optional<ReplyButton> findReplyButtonByCommand(Message message, Chat chat) {
-        var replyKeyboards = replyService.findAllByChatId(chat.getId());
-
-        return replyKeyboards.stream()
-                .flatMap(k -> k.getRows().stream())
+        var replyMessage = keyboards.stream()
+                .flatMap(k -> k.getReplyRows().stream())
                 .flatMap(r -> r.getButtons().stream())
                 .filter(b -> b.getText().equals(message.getText()))
+                .map(b -> {
+                     return nonNull(b.getAttachedKeyboard())
+                            ? buildMessage(chat.getId(), b.getDescription(), convert(b.getAttachedKeyboard()))
+                            : buildMessage(chat.getId(), b.getDescription());
+
+                })
                 .findFirst();
-    }
 
-    private SendMessage createByCommand(String chatId, InlineButton button) {
-        var type = button.getNextKeyboardType();
-        var text = button.getNextMessageText();
-
-        if (nonNull(type)) {
-            var keyboard = InlineKeyboardType.hasType(type)
-                    ? inlineService.build(InlineKeyboardType.valueOf(type))
-                    : replyService.build(ReplyKeyboardType.valueOf(type));
-
-            return buildMessage(chatId, text, keyboard);
-        }
-
-        return buildMessage(chatId, text);
-
-    }
-
-    private SendMessage createByCommand(String chatId, ReplyButton button) {
-        var type = button.getNextKeyboardType();
-        var text = button.getNextMessageText();
-
-        if (nonNull(type)) {
-            var keyboard = ReplyKeyboardType.hasType(type)
-                    ? replyService.build(ReplyKeyboardType.valueOf(type))
-                    : inlineService.build(InlineKeyboardType.valueOf(type));
-
-            return buildMessage(chatId, text, keyboard);
-        }
-
-        return buildMessage(chatId, text);
+        return inlineMessage.isEmpty() ? replyMessage : inlineMessage;
     }
 
     private SendMessage buildMessage(String chatId, String text) {
@@ -107,20 +79,11 @@ public class MessageServiceImpl implements MessageService {
                 .build();
     }
 
-
     private SendMessage buildMessage(String chatId, String text, ReplyKeyboard keyboard) {
         return SendMessage.builder()
                 .chatId(chatId)
                 .text(text)
                 .replyMarkup(keyboard)
-                .build();
-    }
-
-    private SendMessage buildDefaultMessage(Message message) {
-        return SendMessage.builder()
-                .chatId(message.getChatId().toString())
-                .text(message.getText())
-                .replyMarkup(replyService.build(ReplyKeyboardType.DEFAULT_REPLY_KEYBOARD))
                 .build();
     }
 }

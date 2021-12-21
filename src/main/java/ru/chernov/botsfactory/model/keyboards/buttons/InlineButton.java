@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import ru.chernov.botsfactory.model.keyboards.Keyboard;
 
 import javax.persistence.*;
 import java.util.Objects;
@@ -36,11 +37,12 @@ public class InlineButton {
     @Column(name = "pay")
     private Boolean pay;
 
-    @Column(name = "next_message_text")
-    private String nextMessageText;
+    @Column(name = "description")
+    private String description;
 
-    @Column(name = "next_keyboard_type")
-    private String nextKeyboardType;
+    @OneToOne
+    @JoinColumn(name = "attached_keyboard_id", referencedColumnName = "id")
+    private Keyboard attachedKeyboard;
 
     @Override
     public boolean equals(Object o) {
@@ -50,12 +52,12 @@ public class InlineButton {
 
         return id.equals(that.id) && text.equals(that.text) && Objects.equals(url, that.url)
                 && Objects.equals(callbackData, that.callbackData) && Objects.equals(pay, that.pay)
-                && Objects.equals(nextMessageText, that.nextMessageText)
-                && Objects.equals(nextKeyboardType, that.nextKeyboardType);
+                && Objects.equals(description, that.description)
+                && Objects.equals(attachedKeyboard, that.attachedKeyboard);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, text, url, callbackData, pay, nextMessageText, nextKeyboardType);
+        return Objects.hash(id, text, url, callbackData, pay, description, attachedKeyboard);
     }
 }

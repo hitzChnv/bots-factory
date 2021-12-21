@@ -3,18 +3,15 @@
                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext
    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
 
-    <include file="v1/20211214-01-create-schema-bots-factory.xml" relativeToChangelogFile="true"/>
-    <include file="v1/20211214-02-create-table-inline-buttons.xml" relativeToChangelogFile="true"/>
-    <include file="v1/20211214-03-create-table-inline-keyboard-rows.xml" relativeToChangelogFile="true"/>
-    <include file="v1/20211214-04-create-table-inline-row-button-union.xml" relativeToChangelogFile="true"/>
-    <include file="v1/20211214-05-create-table-inline-keyboards.xml" relativeToChangelogFile="true"/>
-    <include file="v1/20211214-06-create-table-inline-keyboard-row-union.xml" relativeToChangelogFile="true"/>
-    <include file="v1/20211214-07-create-table-reply-buttons.xml" relativeToChangelogFile="true"/>
-    <include file="v1/20211214-08-create-table-reply-keyboard-rows.xml" relativeToChangelogFile="true"/>
-    <include file="v1/20211214-09-create-table-reply-row-button-union.xml" relativeToChangelogFile="true"/>
-    <include file="v1/20211214-10-create-table-reply-keyboards.xml" relativeToChangelogFile="true"/>
-    <include file="v1/20211214-11-create-table-reply-keyboard-row-union.xml" relativeToChangelogFile="true"/>
-    <include file="v1/20211214-12-create-reply-keyboard-fks.xml" relativeToChangelogFile="true"/>
-    <include file="v1/20211214-13-create-inline-keyboard-fks.xml" relativeToChangelogFile="true"/>
-    <include file="v2/20211215-01-create_table-chats.xml" relativeToChangelogFile="true"/>
+    <include file="v1/20211221-01-create-schema-bots-factory.xml" relativeToChangelogFile="true"/>
+    <include file="v1/20211221-02-create-table-inline-buttons.xml" relativeToChangelogFile="true"/>
+    <include file="v1/20211221-03-create-table-inline-keyboard-rows.xml" relativeToChangelogFile="true"/>
+    <include file="v1/20211221-04-create-table-reply-buttons.xml" relativeToChangelogFile="true"/>
+    <include file="v1/20211221-05-create-table-reply-keyboard-rows.xml" relativeToChangelogFile="true"/>
+    <include file="v1/20211221-06-create-table-reply-row-button-union.xml" relativeToChangelogFile="true"/>
+    <include file="v1/20211221-07-create-table-keyboards.xml" relativeToChangelogFile="true"/>
+    <include file="v1/20211221-08-create-table-inline-row-button-union.xml" relativeToChangelogFile="true"/>
+    <include file="v1/20211221-09-create-table-keyboard-row-union.xml" relativeToChangelogFile="true"/>
+    <include file="v1/20211221-10-create-keyboard-fks.xml" relativeToChangelogFile="true"/>
+    <include file="v2/20211221-01-create_table-chats.xml" relativeToChangelogFile="true"/>
 </databaseChangeLog>

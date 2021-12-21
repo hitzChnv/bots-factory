@@ -3,7 +3,7 @@
                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext
    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
 
-    <changeSet id="20211215-01-01-create-table-chats" author="hitz" context="production">
+    <changeSet id="20211221-01-01-create-table-chats" author="hitz" context="production">
         <createTable schemaName="bots_factory" tableName="chats" remarks="Chats">
             <column name="id" type="varchar">
                 <constraints primaryKey="true"/>
@@ -11,11 +11,11 @@
         </createTable>
     </changeSet>
 
-    <changeSet id="20211215-01-02-create-table-chat-keyboard-union" author="hitz" context="production">
+    <changeSet id="20211221-01-02-create-table-chat-keyboard-union" author="hitz" context="production">
         <createTable schemaName="bots_factory" tableName="chat_keyboard_union" remarks="Chats keyboard">
             <column name="chat_id" type="varchar" remarks="Chat identifier"/>
-            <column name="inline_keyboard_id" type="bigint" remarks="Inline keyboard identifier"/>
-            <column name="reply_keyboard_id" type="bigint" remarks="Reply keyboard identifier"/>
+            <column name="keyboard_id" type="bigint" remarks="Keyboard identifier"/>
+
         </createTable>
     </changeSet>
 
@@ -30,17 +30,9 @@
                                  onDelete="CASCADE"/>
         <addForeignKeyConstraint baseTableName="chat_keyboard_union"
                                  baseTableSchemaName="bots_factory"
-                                 baseColumnNames="inline_keyboard_id"
-                                 constraintName="chat-keyboard-union-inline-keyboard-id-fk"
-                                 referencedTableName="inline_keyboards"
-                                 referencedTableSchemaName="bots_factory"
-                                 referencedColumnNames="id"
-                                 onDelete="CASCADE"/>
-        <addForeignKeyConstraint baseTableName="chat_keyboard_union"
-                                 baseTableSchemaName="bots_factory"
-                                 baseColumnNames="reply_keyboard_id"
-                                 constraintName="chat-keyboard-union-reply-keyboard-id-fk"
-                                 referencedTableName="reply_keyboards"
+                                 baseColumnNames="keyboard_id"
+                                 constraintName="chat-keyboard-union-keyboard-id-fk"
+                                 referencedTableName="keyboards"
                                  referencedTableSchemaName="bots_factory"
                                  referencedColumnNames="id"
                                  onDelete="CASCADE"/>
