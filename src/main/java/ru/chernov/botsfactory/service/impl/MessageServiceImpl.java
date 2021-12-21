@@ -7,14 +7,16 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboard;
 import ru.chernov.botsfactory.model.entity.Chat;
+import ru.chernov.botsfactory.model.keyboards.buttons.Button;
 import ru.chernov.botsfactory.service.ChatService;
 import ru.chernov.botsfactory.service.KeyboardService;
 import ru.chernov.botsfactory.service.MessageService;
 
 import java.util.Optional;
+import java.util.function.Function;
 
 import static java.util.Objects.nonNull;
-import static ru.chernov.botsfactory.converter.KeyboardConverter.convert;
+import static ru.chernov.botsfactory.converter.KeyboardConverter.convertWithType;
 import static ru.chernov.botsfactory.model.enums.KeyboardType.DEFAULT_REPLY_KEYBOARD;
 
 @Service
@@ -29,14 +31,14 @@ public class MessageServiceImpl implements MessageService {
     public SendMessage create(Message message) {
         var chatId = message.getChatId().toString();
 
-        var optionalChat = chatService.findById(chatId);
-        var chat = optionalChat.isEmpty() ? chatService.create(chatId) : optionalChat.get();
+        var savedChat = chatService.findById(chatId);
+        var chat = savedChat.isEmpty() ? chatService.create(chatId) : savedChat.get();
 
         return create(message, chat);
     }
 
     private SendMessage create(Message message, Chat chat) {
-        var defaultKeyboard = convert(keyboardService.findByType(DEFAULT_REPLY_KEYBOARD));
+        var defaultKeyboard = convertWithType(keyboardService.findByType(DEFAULT_REPLY_KEYBOARD));
 
         return buildMessage(message, chat)
                 .orElse(buildMessage(chat.getId(), message.getText(), defaultKeyboard));
@@ -45,32 +47,28 @@ public class MessageServiceImpl implements MessageService {
     private Optional<SendMessage> buildMessage(Message message, Chat chat) {
         var keyboards = chat.getKeyboards();
 
-        var inlineMessage = keyboards.stream()
+        Function<Button, SendMessage> sendMessageFunction = b -> nonNull(b.getAttachedKeyboard())
+                ? buildMessage(chat.getId(), b.getDescription(), convertWithType(b.getAttachedKeyboard()))
+                : buildMessage(chat.getId(), b.getDescription());
+
+        var messageDefinedInlineKeyboard = keyboards.stream()
                 .flatMap(k -> k.getInlineRows().stream())
                 .flatMap(r -> r.getButtons().stream())
                 .filter(b -> b.getText().equals(message.getText()))
-                .map(b -> {
-                    return nonNull(b.getAttachedKeyboard())
-                            ? buildMessage(chat.getId(), b.getDescription(), convert(b.getAttachedKeyboard()))
-                            : buildMessage(chat.getId(), b.getDescription());
-
-                })
+                .map(sendMessageFunction)
                 .findFirst();
 
-        var replyMessage = keyboards.stream()
+        var messageDefinedReplyKeyboard = keyboards.stream()
                 .flatMap(k -> k.getReplyRows().stream())
                 .flatMap(r -> r.getButtons().stream())
                 .filter(b -> b.getText().equals(message.getText()))
-                .map(b -> {
-                     return nonNull(b.getAttachedKeyboard())
-                            ? buildMessage(chat.getId(), b.getDescription(), convert(b.getAttachedKeyboard()))
-                            : buildMessage(chat.getId(), b.getDescription());
-
-                })
+                .map(sendMessageFunction)
                 .findFirst();
 
-        return inlineMessage.isEmpty() ? replyMessage : inlineMessage;
+        return messageDefinedInlineKeyboard.isEmpty() ? messageDefinedReplyKeyboard : messageDefinedInlineKeyboard;
     }
+
+
 
     private SendMessage buildMessage(String chatId, String text) {
         return SendMessage.builder()

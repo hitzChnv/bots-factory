@@ -22,7 +22,7 @@ public final class KeyboardConverter {
     private KeyboardConverter() {
     }
 
-    public static ReplyKeyboard convert(Keyboard source) {
+    public static ReplyKeyboard convertWithType(Keyboard source) {
         var replyKeyboard = REPLY_TYPES.stream()
                 .filter(t -> nonNull(source.getType()) && t.equals(source.getType()))
                 .map(t -> convertReply(source))

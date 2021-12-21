@@ -8,8 +8,6 @@ import javax.persistence.*;
 import java.util.List;
 import java.util.Objects;
 
-import static javax.persistence.GenerationType.IDENTITY;
-
 @Getter
 @Setter
 @RequiredArgsConstructor
@@ -19,7 +17,6 @@ import static javax.persistence.GenerationType.IDENTITY;
 public class InlineKeyboardRow {
 
     @Id
-    @GeneratedValue(strategy = IDENTITY)
     private Long id;
 
     @ManyToMany(fetch = FetchType.EAGER)
