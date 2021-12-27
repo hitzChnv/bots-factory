@@ -1,43 +1,41 @@
 package ru.chernov.botsfactory.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.objects.Chat;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboard;
-import ru.chernov.botsfactory.model.entity.Chat;
-import ru.chernov.botsfactory.model.keyboards.buttons.Button;
-import ru.chernov.botsfactory.service.ChatService;
-import ru.chernov.botsfactory.service.KeyboardService;
+import ru.chernov.botsfactory.model.dto.KeyboardRequest;
 import ru.chernov.botsfactory.service.MessageService;
 
+import java.util.List;
 import java.util.Optional;
-import java.util.function.Function;
-
-import static java.util.Objects.nonNull;
-import static ru.chernov.botsfactory.converter.KeyboardConverter.convertWithType;
-import static ru.chernov.botsfactory.model.enums.KeyboardType.DEFAULT_REPLY_KEYBOARD;
 
 @Service
 @RequiredArgsConstructor
 public class MessageServiceImpl implements MessageService {
 
-    private final KeyboardService keyboardService;
-    private final ChatService chatService;
+    private final RestTemplate restTemplate;
 
     @Override
-    @Transactional
     public SendMessage create(Message message) {
-        var chatId = message.getChatId().toString();
+        /*var chatId = message.getChatId().toString();
 
         var savedChat = chatService.findById(chatId);
         var chat = savedChat.isEmpty() ? chatService.create(chatId) : savedChat.get();
 
-        return create(message, chat);
+        return create(message, chat);*/
+        return null;
     }
 
-    private SendMessage create(Message message, Chat chat) {
+    /*private SendMessage create(Message message, Chat chat) {
         var defaultKeyboard = convertWithType(keyboardService.findByType(DEFAULT_REPLY_KEYBOARD));
 
         return buildMessage(message, chat)
@@ -66,7 +64,7 @@ public class MessageServiceImpl implements MessageService {
                 .findFirst();
 
         return messageDefinedInlineKeyboard.isEmpty() ? messageDefinedReplyKeyboard : messageDefinedInlineKeyboard;
-    }
+    }*/
 
 
 
@@ -83,5 +81,17 @@ public class MessageServiceImpl implements MessageService {
                 .text(text)
                 .replyMarkup(keyboard)
                 .build();
+    }
+
+    private List<KeyboardRequest> findKeyboards() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_XML);
+        HttpEntity<KeyboardRequest[]> request = new HttpEntity<>(headers);
+
+        var response = restTemplate
+                .exchange("http://localhost:7070/data-store/api/keyboards/", HttpMethod.GET,
+                        request, new ParameterizedTypeReference<List<KeyboardRequest>>(){});
+
+        return response.getBody();
     }
 }
