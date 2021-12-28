@@ -10,7 +10,7 @@ public interface KeyboardService {
 
     List<Keyboard> findAll();
 
-    Keyboard findByType(KeyboardType type);
+    Optional<Keyboard> findByType(KeyboardType type);
 
     Optional<Keyboard> findById(Long id);
 }

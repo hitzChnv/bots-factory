@@ -25,9 +25,9 @@ public class ChatController {
                 .orElse(notFound().build());
     }
 
-    @PostMapping
-    public ResponseEntity<ChatResponse> create(@RequestBody ChatRequest chatRequest) {
-        var chat = chatService.create(chatRequest.getId());
+    @PostMapping("{id}")
+    public ResponseEntity<ChatResponse> create(@PathVariable String id) {
+        var chat = chatService.create(id);
 
         return ok(convert(chat));
     }

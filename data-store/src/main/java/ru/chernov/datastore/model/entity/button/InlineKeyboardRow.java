@@ -20,7 +20,8 @@ public class InlineKeyboardRow {
     private Long id;
 
     @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(schema = "bots_factory", name = "inline_row_button_union", joinColumns = @JoinColumn(name = "inline_row_id"),
+    @JoinTable(schema = "bots_factory", name = "inline_row_button_union",
+            joinColumns = @JoinColumn(name = "inline_row_id"),
             inverseJoinColumns = @JoinColumn(name = "inline_button_id"))
     private List<InlineButton> buttons;
 

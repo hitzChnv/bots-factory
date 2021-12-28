@@ -1,4 +1,4 @@
-package ru.chernov.botsfactory.model.dto;
+package ru.chernov.app.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
@@ -6,29 +6,29 @@ import lombok.*;
 import java.util.List;
 
 @Data
-public class KeyboardRequest {
+public class Keyboard {
 
     private Long id;
 
     private String type;
 
     @JsonProperty("inlineRowsResponse")
-    private List<InlineRowRequest> inlineRowsRequest;
+    private List<InlineRow> inlineRows;
 
     @JsonProperty("replyRowsResponse")
-    private List<ReplyRowRequest> replyRowsRequest;
+    private List<ReplyRow> replyRows;
 
     @Data
-    public static class InlineRowRequest {
+    public static class InlineRow {
 
 
         private Long id;
 
         @JsonProperty("inlineButtonsResponse")
-        private List<InlineButtonRequest> inlineButtonsRequest;
+        private List<InlineButton> inlineButtons;
 
         @Data
-        public static class InlineButtonRequest {
+        public static class InlineButton {
 
             private Long id;
 
@@ -47,15 +47,15 @@ public class KeyboardRequest {
     }
 
     @Data
-    public static class ReplyRowRequest {
+    public static class ReplyRow {
 
         private Long id;
 
         @JsonProperty("replyButtonsResponse")
-        private List<ReplyButtonRequest> replyButtonsRequest;
+        private List<ReplyButton> replyButtons;
 
         @Data
-        public static class ReplyButtonRequest {
+        public static class ReplyButton {
 
             private Long id;
 

@@ -3,6 +3,7 @@ package ru.chernov.datastore.service.impl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.chernov.datastore.model.entity.button.InlineKeyboardRow;
 import ru.chernov.datastore.model.entity.keyboard.Keyboard;
 import ru.chernov.datastore.model.enums.KeyboardType;
 import ru.chernov.datastore.repository.KeyboardRepository;
@@ -25,13 +26,16 @@ public class KeyboardServiceImpl implements KeyboardService {
 
     @Override
     @Transactional
-    public Keyboard findByType(KeyboardType type) {
+    public Optional<Keyboard> findByType(KeyboardType type) {
         return repository.findByType(type);
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public Optional<Keyboard> findById(Long id) {
-        return repository.findById(id);
+        Optional<Keyboard> keyboard = repository.findById(id);
+        List<InlineKeyboardRow> inlineRows = keyboard.get().getInlineRows();
+
+        return keyboard;
     }
 }

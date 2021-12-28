@@ -1,4 +1,4 @@
-package ru.chernov.botsfactory.service;
+package ru.chernov.app.service;
 
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;

@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import ru.chernov.datastore.model.entity.keyboard.Keyboard;
 
 import javax.persistence.*;
 

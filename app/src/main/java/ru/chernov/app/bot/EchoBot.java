@@ -1,4 +1,4 @@
-package ru.chernov.botsfactory.bots;
+package ru.chernov.app.bot;
 
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
-import ru.chernov.botsfactory.service.MessageService;
+import ru.chernov.app.service.MessageService;
 
 /**
  * Simple echo bot

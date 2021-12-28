@@ -27,25 +27,25 @@ public class Keyboard {
     @Column(name = "type")
     private KeyboardType type;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany
     @JoinTable(schema = "bots_factory", name = "keyboard_row_union",
             joinColumns = @JoinColumn(name = "keyboard_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "inline_row_id", referencedColumnName = "id"))
     private List<InlineKeyboardRow> inlineRows;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany
     @JoinTable(schema = "bots_factory", name = "keyboard_row_union",
             joinColumns = @JoinColumn(name = "keyboard_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "reply_row_id", referencedColumnName = "id"))
     private List<ReplyKeyboardRow> replyRows;
 
-    /*@ManyToMany
+    @ManyToMany
     @JoinTable(schema = "bots_factory", name = "chat_keyboard_union", joinColumns = {
             @JoinColumn(name = "keyboard_id", referencedColumnName = "id")
     }, inverseJoinColumns = {
             @JoinColumn(name = "chat_id", referencedColumnName = "id")
     })
-    private List<Chat> chats;*/
+    private List<Chat> chats;
 
     @Override
     public boolean equals(Object o) {
@@ -53,12 +53,12 @@ public class Keyboard {
         if (!(o instanceof Keyboard)) return false;
         Keyboard keyboard = (Keyboard) o;
         return Objects.equals(id, keyboard.id) && type == keyboard.type
-                && Objects.equals(inlineRows, keyboard.inlineRows) && Objects.equals(replyRows, keyboard.replyRows);
-                //&& Objects.equals(chats, keyboard.chats);
+                && Objects.equals(inlineRows, keyboard.inlineRows) && Objects.equals(replyRows, keyboard.replyRows)
+                && Objects.equals(chats, keyboard.chats);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, type, inlineRows, replyRows);
+        return Objects.hash(id, type, inlineRows, replyRows, chats);
     }
 }
