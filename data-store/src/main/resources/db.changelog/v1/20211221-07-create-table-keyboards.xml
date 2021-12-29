@@ -9,6 +9,7 @@
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="type" type="varchar" remarks="Type of keyboard"/>
+            <column name="title" type="varchar" remarks="Title"/>
         </createTable>
     </changeSet>
 
@@ -20,18 +21,22 @@
         <insert schemaName="bots_factory" tableName="keyboards">
             <column name="id" type="bigint" value="2"/>
             <column name="type" type="varchar" value="CONTACTS_REPLY_KEYBOARD"/>
+            <column name="title" type="varchar" value="Вы в меню контактов. Выберите действие."/>
         </insert>
         <insert schemaName="bots_factory" tableName="keyboards">
             <column name="id" type="bigint" value="3"/>
             <column name="type" type="varchar" value="QUESTIONS_REPLY_KEYBOARD"/>
+            <column name="title" type="varchar" value="Вы в меню часто задаваемых вопросов. Выберите действие."/>
         </insert>
         <insert schemaName="bots_factory" tableName="keyboards">
             <column name="id" type="bigint" value="4"/>
             <column name="type" type="varchar" value="MUSIC_INLINE_KEYBOARD"/>
+            <column name="title" type="varchar" value="Перейдите по ссылке, что бы послушать музыку!"/>
         </insert>
         <insert schemaName="bots_factory" tableName="keyboards">
             <column name="id" type="bigint" value="5"/>
             <column name="type" type="varchar" value="VIDEO_INLINE_KEYBOARD"/>
+            <column name="title" type="varchar" value="Перейдите по ссылке, что бы помотреть видео!"/>
         </insert>
     </changeSet>
 </databaseChangeLog>

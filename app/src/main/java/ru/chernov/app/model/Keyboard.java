@@ -12,6 +12,8 @@ public class Keyboard {
 
     private String type;
 
+    private String title;
+
     @JsonProperty("inlineRowsResponse")
     private List<InlineRow> inlineRows;
 

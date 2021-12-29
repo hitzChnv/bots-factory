@@ -2,16 +2,11 @@ package ru.chernov.datastore.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import ru.chernov.datastore.model.dto.KeyboardResponse;
-import ru.chernov.datastore.model.entity.keyboard.Keyboard;
 import ru.chernov.datastore.service.KeyboardService;
 
 import java.util.List;
-import java.util.Optional;
 
 import static org.springframework.http.ResponseEntity.notFound;
 import static ru.chernov.datastore.model.enums.KeyboardType.DEFAULT_REPLY_KEYBOARD;
@@ -32,7 +27,7 @@ public class KeyboardController {
 
     @GetMapping("{id}")
     public ResponseEntity<KeyboardResponse> findById(@PathVariable Long id) {
-        Optional<Keyboard> keyboard = keyboardService.findById(id);
+        var keyboard = keyboardService.findById(id);
 
         return keyboard.map(k -> ResponseEntity.ok(convert(k))).orElse(notFound().build());
     }
