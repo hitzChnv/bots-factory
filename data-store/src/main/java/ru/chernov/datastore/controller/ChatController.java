@@ -3,7 +3,6 @@ package ru.chernov.datastore.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.chernov.datastore.model.dto.ChatRequest;
 import ru.chernov.datastore.model.dto.ChatResponse;
 import ru.chernov.datastore.service.ChatService;
 

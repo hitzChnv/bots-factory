@@ -12,24 +12,8 @@ import java.util.stream.Collectors;
 
 public final class KeyboardConverter {
 
-    //private static final List<KeyboardType> REPLY_TYPES = of(DEFAULT_REPLY_KEYBOARD, CONTACTS_REPLY_KEYBOARD, QUESTIONS_REPLY_KEYBOARD);
-    //private static final List<KeyboardType> INLINE_TYPES = of(MUSIC_INLINE_KEYBOARD, VIDEO_INLINE_KEYBOARD);
-
     private KeyboardConverter() {
     }
-
-    /*public static ReplyKeyboard convert(Keyboard source) {
-        var replyKeyboard = convertReply(source)
-
-        var inlineKeyboard = INLINE_TYPES.stream()
-                .filter(t -> nonNull(source.getType()) && t.toString().equals(source.getType()))
-                .map(t -> convertInline(source))
-                .findFirst();
-
-        return replyKeyboard.isEmpty()
-                ? inlineKeyboard.orElseThrow(() -> new IllegalArgumentException(format("Wrong type format: %s", source.getType())))
-                : replyKeyboard.get();
-    }*/
 
     public static InlineKeyboardMarkup convertInline(Keyboard source) {
         return InlineKeyboardMarkup.builder()

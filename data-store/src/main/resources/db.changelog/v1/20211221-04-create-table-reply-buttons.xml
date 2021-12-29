@@ -22,21 +22,25 @@
         <insert schemaName="bots_factory" tableName="reply_buttons">
             <column name="id" type="bigint" value="1"/>
             <column name="text" type="varchar" value="Контакты 📱"/>
+            <column name="description" type="varchar" value="Вы в меню контактов. Выберите действие."/>
             <column name="attached_keyboard_id" type="bigint" value="2"/>
         </insert>
         <insert schemaName="bots_factory" tableName="reply_buttons">
             <column name="id" type="bigint" value="2"/>
             <column name="text" type="varchar" value="Часто задаваемые вопросы 📎"/>
+            <column name="description" type="varchar" value="Вы в меню часто задаваемых вопросов. Выберите действие."/>
             <column name="attached_keyboard_id" type="bigint" value="3"/>
         </insert>
         <insert schemaName="bots_factory" tableName="reply_buttons">
             <column name="id" type="bigint" value="3"/>
             <column name="text" type="varchar" value="Музыка 🎧"/>
+            <column name="description" type="varchar" value="Перейдите по ссылке, что бы послушать музыку!"/>
             <column name="attached_keyboard_id" type="bigint" value="4"/>
         </insert>
         <insert schemaName="bots_factory" tableName="reply_buttons">
             <column name="id" type="bigint" value="4"/>
             <column name="text" type="varchar" value="Видео 📹"/>
+            <column name="description" type="varchar" value="Перейдите по ссылке, что бы помотреть видео!"/>
             <column name="attached_keyboard_id" type="bigint" value="5"/>
         </insert>
         <insert schemaName="bots_factory" tableName="reply_buttons">

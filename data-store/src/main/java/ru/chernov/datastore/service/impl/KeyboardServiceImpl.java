@@ -3,8 +3,6 @@ package ru.chernov.datastore.service.impl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.chernov.datastore.model.entity.button.Button;
-import ru.chernov.datastore.model.entity.button.InlineKeyboardRow;
 import ru.chernov.datastore.model.entity.keyboard.Keyboard;
 import ru.chernov.datastore.model.enums.KeyboardType;
 import ru.chernov.datastore.repository.KeyboardRepository;
@@ -12,8 +10,6 @@ import ru.chernov.datastore.service.KeyboardService;
 
 import java.util.List;
 import java.util.Optional;
-
-import static ru.chernov.datastore.model.enums.KeyboardType.DEFAULT_REPLY_KEYBOARD;
 
 @Service
 @RequiredArgsConstructor

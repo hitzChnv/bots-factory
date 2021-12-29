@@ -27,9 +27,6 @@ public class Keyboard {
     @Column(name = "type")
     private KeyboardType type;
 
-    @Column(name = "title")
-    private String title;
-
     @ManyToMany
     @JoinTable(schema = "bots_factory", name = "keyboard_row_union",
             joinColumns = @JoinColumn(name = "keyboard_id", referencedColumnName = "id"),

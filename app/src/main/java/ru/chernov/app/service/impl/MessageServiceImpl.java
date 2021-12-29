@@ -6,9 +6,16 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboard;
 import ru.chernov.app.model.Chat;
+import ru.chernov.app.model.Keyboard.InlineRow.InlineButton;
+import ru.chernov.app.model.Keyboard.ReplyRow.ReplyButton;
 import ru.chernov.app.service.DataStoreClient;
 import ru.chernov.app.service.MessageService;
 
+import java.util.Optional;
+import java.util.function.Function;
+import java.util.function.Predicate;
+
+import static java.util.Objects.nonNull;
 import static ru.chernov.app.util.KeyboardConverter.convertInline;
 import static ru.chernov.app.util.KeyboardConverter.convertReply;
 
@@ -21,70 +28,57 @@ public class MessageServiceImpl implements MessageService {
     @Override
     public SendMessage create(Message message) {
         var chatId = message.getChatId().toString();
+        var chat = findChatById(chatId);
 
-        var savedChat = dataStoreClient.findChatById(chatId);
-        var chat = savedChat.isEmpty() ? dataStoreClient.create(chatId) : savedChat.get();
-
-        return buildMessage(message, chat);
+        return buildMessage(message, chat)
+                .orElse(buildMessage(chatId, message.getText(), findDefaultKeyboard()));
     }
 
-    /*private SendMessage create(Message message, Chat chat) {
+    private Optional<SendMessage> buildMessage(Message message, Chat chat) {
+        var keyboards = chat.getKeyboards();
 
+        Predicate<String> buttonPredicate = s -> s.equals(message.getText());
 
-        return buildMessage(message, chat).orElse(buildMessage(chat.getId(), message.getText(), defaultKeyboard));
-    }*/
-
-    private SendMessage buildMessage(Message message, Chat chat) {
-        var defaultKeyboard = findDefaultKeyboard();
-        var button = dataStoreClient.findButtonByCommand(message.getText());
-
-        var inlineKeyboard = dataStoreClient.findInlineKeyboardByIdsAndCommand(chat.getId(), message.getText());
-        var replyKeyboard = dataStoreClient.findReplyKeyboardByIdsAndCommand(chat.getId(), message.getText());
-
-        SendMessage sendMessage;
-        if (inlineKeyboard.isPresent()) {
-            sendMessage = buildMessage(chat.getId(),
-                    button.isPresent()
-                            ? button.get().getDescription()
-                            : inlineKeyboard.get().getTitle(),
-                    convertInline(inlineKeyboard.get()));
-        } else if (replyKeyboard.isPresent()) {
-            sendMessage = buildMessage(chat.getId(),
-                    button.isPresent()
-                            ? button.get().getDescription()
-                            : replyKeyboard.get().getTitle(),
-                    convertReply(replyKeyboard.get()));
-        } else {
-            sendMessage = buildMessage(chat.getId(), message.getText(), defaultKeyboard);
-        }
-
-        return sendMessage;
-
-        /*Optional<SendMessage> sendMessageReply;
-        if (replyKeyboard.isEmpty()) {
-            if (button.isPresent()) {
-                sendMessageReply = buildMessage(chat.getId(), button.get().getDescription());
-            }
-        } else {
-            if (button.isPresent()) {
-                sendMessageReply = buildMessage(chat.getId(),
-                        button.get().getDescription(),
-                        convert(replyKeyboard.get()));
-            }
-        }*/
-
-
-
-        /*Function<Keyboard.InlineRow.InlineButton, SendMessage> inlineKeyboardFunction = b -> nonNull(b.getKeyboardId())
+        Function<InlineButton, SendMessage> inlineKeyboardFunction = b -> nonNull(b.getKeyboardId())
                 ? buildMessage(chat.getId(), b.getDescription(), findKeyboardById(b.getKeyboardId()))
                 : buildMessage(chat.getId(), b.getDescription());
 
-        Function<Keyboard.ReplyRow.ReplyButton, SendMessage> replyKeyboardFunction = b -> nonNull(b.getKeyboardId())
+        Function<ReplyButton, SendMessage> replyKeyboardFunction = b -> nonNull(b.getKeyboardId())
                 ? buildMessage(chat.getId(), b.getDescription(), findKeyboardById(b.getKeyboardId()))
-                : buildMessage(chat.getId(), b.getDescription());*/
+                : buildMessage(chat.getId(), b.getDescription());
 
+        var inlineSendMessage = keyboards.stream()
+                .flatMap(k -> k.getInlineRows().stream())
+                .flatMap(r -> r.getInlineButtons().stream())
+                .filter(b -> buttonPredicate.test(b.getText()))
+                .map(inlineKeyboardFunction)
+                .findFirst();
 
-        //return messageDefinedInlineKeyboard.isEmpty() ? messageDefinedReplyKeyboard : messageDefinedInlineKeyboard;
+        var replySendMessage = keyboards.stream()
+                .flatMap(k -> k.getReplyRows().stream())
+                .flatMap(r -> r.getReplyButtons().stream())
+                .filter(b -> buttonPredicate.test(b.getText()))
+                .map(replyKeyboardFunction)
+                .findFirst();
+
+        return inlineSendMessage.isEmpty() ? replySendMessage : inlineSendMessage;
+    }
+
+    private Chat findChatById(String id) {
+        var chat = dataStoreClient.findChatById(id);
+
+        return chat.isEmpty() ? dataStoreClient.create(id) : chat.get();
+    }
+
+    private ReplyKeyboard findKeyboardById(Long id) {
+        var keyboard = dataStoreClient.findKeyboardById(id);
+        if (keyboard.isPresent()) {
+            return keyboard.get().getReplyRows().isEmpty()
+                    ? convertInline(keyboard.get())
+                    : convertReply(keyboard.get());
+        }
+
+        return findDefaultKeyboard();
     }
 
     private ReplyKeyboard findDefaultKeyboard() {
