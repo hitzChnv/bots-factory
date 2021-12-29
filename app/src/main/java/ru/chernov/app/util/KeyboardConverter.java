@@ -7,6 +7,7 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKe
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardButton;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 import ru.chernov.app.model.Keyboard;
+import ru.chernov.datastore.model.enums.KeyboardType;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -14,23 +15,24 @@ import java.util.stream.Collectors;
 import static java.lang.String.format;
 import static java.util.List.of;
 import static java.util.Objects.nonNull;
+import static ru.chernov.datastore.model.enums.KeyboardType.*;
 
 public final class KeyboardConverter {
 
-    private static final List<String> REPLY_TYPES = of("DEFAULT_REPLY_KEYBOARD", "CONTACTS_REPLY_KEYBOARD", "QUESTIONS_REPLY_KEYBOARD");
-    private static final List<String> INLINE_TYPES = of("MUSIC_INLINE_KEYBOARD", "VIDEO_INLINE_KEYBOARD");
+    private static final List<KeyboardType> REPLY_TYPES = of(DEFAULT_REPLY_KEYBOARD, CONTACTS_REPLY_KEYBOARD, QUESTIONS_REPLY_KEYBOARD);
+    private static final List<KeyboardType> INLINE_TYPES = of(MUSIC_INLINE_KEYBOARD, VIDEO_INLINE_KEYBOARD);
 
     private KeyboardConverter() {
     }
 
     public static ReplyKeyboard convert(Keyboard source) {
         var replyKeyboard = REPLY_TYPES.stream()
-                .filter(t -> nonNull(source.getType()) && t.equals(source.getType()))
+                .filter(t -> nonNull(source.getType()) && t.toString().equals(source.getType()))
                 .map(t -> convertReply(source))
                 .findFirst();
 
         var inlineKeyboard = INLINE_TYPES.stream()
-                .filter(t -> nonNull(source.getType()) && t.equals(source.getType()))
+                .filter(t -> nonNull(source.getType()) && t.toString().equals(source.getType()))
                 .map(t -> convertInline(source))
                 .findFirst();
 

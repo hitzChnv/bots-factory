@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ru.chernov.datastore.model.dto.KeyboardResponse;
 import ru.chernov.datastore.model.entity.keyboard.Keyboard;
-import ru.chernov.datastore.model.enums.KeyboardType;
 import ru.chernov.datastore.service.KeyboardService;
 
 import java.util.List;
@@ -35,8 +34,7 @@ public class KeyboardController {
     public ResponseEntity<KeyboardResponse> findById(@PathVariable Long id) {
         Optional<Keyboard> keyboard = keyboardService.findById(id);
 
-        return keyboard.map(k -> ResponseEntity.ok(convert(k)))
-                .orElse(notFound().build());
+        return keyboard.map(k -> ResponseEntity.ok(convert(k))).orElse(notFound().build());
     }
 
     @GetMapping("/default")

@@ -27,7 +27,6 @@ public class MessageServiceImpl implements MessageService {
         var chatId = message.getChatId().toString();
 
         var savedChat = dataStoreClient.findChatById(chatId);
-
         var chat = savedChat.isEmpty() ? dataStoreClient.create(chatId) : savedChat.get();
 
         return create(message, chat);
